@@ -3,48 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Api.CustomValues;
 using Api.Models;
-using Api.Repositories;
-using Api.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Api.IServices;
+using Api.ViewModels;
+using Api.Requests.PostRequests;
+using Api.Requests.NotificationRequests;
+using Api.Responses.PostResponses;
 
 namespace Api.Controllers
 {
-
-    public class AttachmentVM
-    {
-        public string FileFormat { get; set; }
-        public int FileSize { get; set; }
-        public string Url { get; set; }
-        public string Path { get; set; }
-        public string Name { get; set; }
-        public int Type { get; set; }
-
-    }
-    public class PostViewerModel
-    {
-        public string CreatedBy { get; set; }
-        public string CreatorName { get; set; }
-        public string PostDescription { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public List<Attachment> Attachments { get; set; }
-    }
-
-    public class PostResponse
-    {
-        public bool Response { get; set; }
-        public List<PostViewerModel> Data { get; set; }
-    }
-
-    public class AddPostRequest
-    {
-        public string BelongsTo { get; set; }
-        public string CreatedBy { get; set; }
-        public int CreatorType { get; set; }
-        public string PostDescription { get; set; }
-        public List<AttachmentVM> Attachments { get; set; }
-    }
+   
     [ApiController]
     [Route("api/[controller]")]
     public class PostController : ControllerBase
@@ -141,7 +111,7 @@ namespace Api.Controllers
                 };
                 post.CreatedAt = DateTime.Now;
                 _postRepository.Add(post);
-                var notify = new NotifyRequest
+                var notify = new NotificationRequest
                 {
                     Target = $"post-{request.BelongsTo}",
                     Type = "post",
@@ -177,10 +147,13 @@ namespace Api.Controllers
                     var user = await _userRepository.GetById(p.CreatedBy);
                     var postModel = new PostViewerModel
                     {
+                        Id = p.Id,
                         CreatedAt = p.CreatedAt,
                         CreatorName = $"{user.FirstName} { user.LastName}",
                         PostDescription = p.PostDescription,
-                        Attachments = p.Attachments
+                        Attachments = p.Attachments,
+                        CreatedBy = p.CreatedBy,
+                        
                     };
                     postResponse.Data.Insert(0, postModel);
                 }

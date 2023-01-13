@@ -2,36 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Api.CustomValues;
 using Api.Models;
-using Api.Repositories;
-using Api.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Api.IServices;
+using Api.Requests.MessageRequests;
+using Api.ViewModels;
+using Api.Requests.NotificationRequests;
+using Api.Responses.MessageResponses;
 
 namespace Api.Controllers
 {
-    public class MessageResponse
-    {
-        public bool Response { get; set; }
-        public List<MessageViewerModel> Data { get; set; }
-    }
-    public class MessageViewerModel
-    {
-        public string CreatedBy { get; set; }
-        public string CreatorName { get; set; }
-        public string MessageBody { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public List<Attachment> Attachments { get; set; }
-    }
-    public class AddMessageRequest
-    {
-        public string BelongsTo { get; set; }
-        public string CreatedBy { get; set; }
-        public int CreatorType { get; set; }
-        public string MessageBody { get; set; }
-        public List<AttachmentVM> Attachments { get; set; }
-    }
-
     [ApiController]
     [Route("api/[controller]")]
     public class MessageController : ControllerBase
@@ -131,7 +112,7 @@ namespace Api.Controllers
                 message.CreatedAt = DateTime.Now;
 
                 _messageRepository.Add(message);
-                var notify = new NotifyRequest
+                var notify = new NotificationRequest
                 {
                     Target = "chat",
                     Type = "chat",
@@ -155,7 +136,7 @@ namespace Api.Controllers
             var messageResponse = new MessageResponse
             {
                 Response = false,
-                Data = new List<MessageViewerModel>()
+                Data = new List<MessageViewModel>()
             };
             try
             {
@@ -163,7 +144,7 @@ namespace Api.Controllers
                 foreach (Message m in messages)
                 {
                     var user = await _userRepository.GetById(m.CreatedBy);
-                    var messageModel = new MessageViewerModel
+                    var messageModel = new MessageViewModel
                     {
                         CreatedAt = m.CreatedAt,
                         CreatedBy = user.Id,
@@ -185,9 +166,9 @@ namespace Api.Controllers
         }
 
         [HttpGet("getSingle")]
-        public async Task<ActionResult<MessageViewerModel>> GetSingle(string chatId)
+        public async Task<ActionResult<MessageViewModel>> GetSingle(string chatId)
         {
-            var msgView = new MessageViewerModel();
+            var msgView = new MessageViewModel();
             try
             {
                 var chat = await _messageRepository.GetSingle(x => x.Id == chatId);

@@ -1,57 +1,15 @@
 ﻿using Api.Enums;
 using Api.Models;
 using Api.Repositories;
+using Api.Requests.SectionRequests;
+using Api.Responses.SectionResponses;
 using Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Api.Repositories;
-using Api.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-   
-    public class ApprovalRequest
-    {
-        public string Supervisor { get; set; }
-        public string Id { get; set; }
-        public string Type { get; set; }
-
-    }
-
-    public class SectionResponse
-    {
-        public bool Response { get; set; }
-        public List<SectionViewModel> Data { get; set; }
-    }
-
-    public class SectionDetailResponse
-    {
-        public bool Response { get; set; }
-        public SectionViewModel Data { get; set; }
-    }
-
-    public class UserResignResponse
-    {
-        public bool Response { get; set; }
-        public SectionViewModel Data { get; set; }
-    }
-    public class SectionStudentRequest
-    {
-        public string SectionId { get; set; }
-        public string StudentId { get; set; }
-    }
-    public class AddSectionRequest
-    {
-        public string BelongsTo { get; set; }
-        public string SectionNumber { get; set; }
-        public int MaxAllocation { get; set; }      
-        public string Faculty { get; set; }      
-        public string SectionStartTime { get; set; }
-        public string SectionEndTime { get; set; }
-    }
 
     [ApiController]
     [Route("api/[controller]")]
@@ -217,12 +175,12 @@ namespace Api.Controllers
             {
                 var section = await _sectionRepository.GetById(sectionId);
                 var course = await _courseRepository.GetById(section.BelongsTo);
-                var studentsView = new List<StudenViewer>();
+                var studentsView = new List<StudenViewModel>();
                 foreach(string id in section.Students)
                 {
                     Student std = await _studentRepository.GetById(id);
                     var result = await _resultRepository.GetSingle(x => x.BelongsTo == id && x.CourseCode == course.Code);
-                    var stdView = new StudenViewer
+                    var stdView = new StudenViewModel
                     {
                         StudentId = std.StudentId,
                         Name = std.Name,

@@ -1,40 +1,16 @@
 ﻿using Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
-using Api.Repositories;
 using Api.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Api.Requests.ResultRequests;
+using Api.CustomValues;
+using Api.Responses.ResultResponses;
 
 namespace Api.Controllers
 {
-    public class AddResultRequest
-    {
-        public string BelongsTo { get; set; }
-        public float QuizMark { get; set; } = 0;
-        public float MidMark { get; set; } = 0;
-        public float ProjectMark { get; set; } = 0;
-        public float AttendanceMark { get; set; } = 0;
-        public float AssignmentMark { get; set; } = 0;
-        public float FinalMark { get; set; } = 0;
-        public string CourseName { get; set; }
-        public string CourseCode { get; set; }
-
-    }
-
-    public class ResultResponse
-    {
-        public List<ResultViewModel> Data { get; set; }
-        public bool Response { get; set; }
-    }
-    public class GradeResult
-    {
-        public string Grade { get; set; }
-        public double Gpa { get; set; }
-    }
-
     [ApiController]
     [Route("api/[controller]")]
     public class ResultController : ControllerBase

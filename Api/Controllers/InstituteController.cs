@@ -1,25 +1,13 @@
 ﻿using Api.Models;
 using Api.Repositories;
+using Api.Requests.InstituteRequests;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-    public class InstituteModelRequest
-    {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Address { get; set; }
-        public string Domain { get; set; }
-        public int EstablishedYear { get; set; }
-        public string About { get; set; }
-        public int SemesterDuration { get; set; }
-        public string Contact { get; set; }
-    }
-
+    
     [ApiController]
     [Route("api/[controller]")]
     public class InstituteController : ControllerBase

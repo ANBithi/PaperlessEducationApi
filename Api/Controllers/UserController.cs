@@ -1,21 +1,14 @@
-﻿using Api.Models;
-using Api.Repositories;
-using Api.Services;
+﻿using Api.IServices;
+using Api.Requests.StudentRequests;
+using Api.Requests.UserRequests;
+using Api.Responses.UserResponses;
 using Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-    public class ChangePasswordRequest
-    {
-        public string Id { get; set; }
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
-    }
-
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -51,32 +44,5 @@ namespace Api.Controllers
 
             return passwordStatus;
         }
-
-        [HttpGet("GetSupervisors")]
-        public async Task<ActionResult<List<SupervisorViewModel>>> GetSupervisors(string id)
-        {
-            var allUsers = await _userService.GetSupervisors(id);
-
-            return allUsers;
-        }
-
-
-
-        [HttpGet("GetSupervisorById")]
-        public async Task<ActionResult<SupervisorViewModel>> GetSupervisorById([FromQuery]string superId)
-        {
-            var supervisor = await _userService.GetSupervisorById(superId);
-
-            return supervisor;
-        }
-
-        [HttpGet("GetAllUsers")]
-        public async Task<ActionResult<List<SupervisorViewModel>>> GetAllUsers([FromQuery] string superId)
-        {
-            var allUsers = await _userService.GetAllUsers();
-
-            return allUsers;
-        }
-
     }
 }

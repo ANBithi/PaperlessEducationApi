@@ -1,9 +1,8 @@
-﻿using Api.Models;
+﻿using Api.IServices;
+using Api.Models;
 using Api.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Api.Requests.NotificationRequests;
+
 
 namespace Api.Services
 {
@@ -16,7 +15,7 @@ namespace Api.Services
         {
             _notificationRepository = notificationRepository;
         }
-        public void CreateNotification(NotifyRequest request)
+        public void CreateNotification(NotificationRequest request)
         {
             var notification = new Notification
             {

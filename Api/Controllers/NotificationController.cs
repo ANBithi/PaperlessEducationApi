@@ -1,28 +1,12 @@
 ﻿using Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
-using Api.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Api.ViewModels;
 
 namespace Api.Controllers
 {
-    public class NotificationView
-    {
-        public string Id { get; set; }
-        public string CreatorName { get; set; }
-        public string CourseName { get; set; }
-        public string PostId { get; set; }
-        public string SectionId { get; set; }
-        public string Section { get; set; }
-    }
-    public class AddMessageNotification
-    {
-        public int Number { get; set; }
-        public string UserId { get; set; }
-    }
 
     [ApiController]
     [Route("api/[controller]")]
@@ -44,9 +28,9 @@ namespace Api.Controllers
         }
 
         [HttpGet("getNotifications")]
-        public async Task<ActionResult<List<NotificationView>>> GetNotifications(string currentUser, string type)
+        public async Task<ActionResult<List<NotificationViewModel>>> GetNotifications(string currentUser, string type)
         {
-            var notificationViews = new List<NotificationView>();
+            var notificationViews = new List<NotificationViewModel>();
             var notifications = await _notificationRepository.GetAllAsync(x=>x.Id != currentUser && x.Type == type);
             if(type == "post")
             {
@@ -56,7 +40,7 @@ namespace Api.Controllers
                     var user = await _userRepository.GetById(post.CreatedBy);
                     var section = await _sectionRepository.GetById(post.BelongsTo);
                     var course = await _courseRepository.GetById(section.BelongsTo);
-                    var view = new NotificationView
+                    var view = new NotificationViewModel
                     {
                         Id = n.Id,
                         CreatorName = $"{user.FirstName} { user.LastName}",
