@@ -10,9 +10,8 @@ namespace Api.Tools.Mapping
         public AutoMapperProfile()
         {
             AllowNullCollections = true;
-
             CreateMap<Reaction, ReactionViewModel>();
-           
+            CreateMap<Comment, CommentViewModel>();
         }
 
     }

@@ -25,16 +25,18 @@ namespace Api.Controllers
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
         private readonly IReactionRepository _reactionRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
         public PostController(IPostRepository postRepository,
             IUserRepository userRepository, INotificationService notificationService,
-            IReactionRepository reactionRepository, IMapper mapper)
+            IReactionRepository reactionRepository, IMapper mapper, ICommentRepository commentRepository)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _notificationService = notificationService;
             _reactionRepository = reactionRepository;
             _mapper = mapper;
+            _commentRepository = commentRepository;
         }
         [HttpPost("add")]
         public async Task<ActionResult<bool>> Add(AddPostRequest request)
@@ -206,13 +208,24 @@ namespace Api.Controllers
            try
             {
                 var user = await _userRepository.GetById(request.CreatedBy);
-                var reaction = new Reaction
+                var found = await _reactionRepository.GetSingle(x => x.CreatedById == request.CreatedBy && x.ParentId == request.ParentId);
+                if (found != null)
                 {
-                    IconId = request.IconId,
-                    ParentId = request.ParentId
-                };
-                reaction.UpdateCreatedByFields(user, DateTime.Now);
-                _reactionRepository.Add(reaction);
+                    found.IconId = request.IconId;
+                    found.UpdateModifiedByFields(user, DateTime.Now);
+                    _reactionRepository.Update(found);
+                }
+                else
+                {
+                    var reaction = new Reaction
+                    {
+                        IconId = request.IconId,
+                        ParentId = request.ParentId
+                    };
+                    reaction.UpdateCreatedByFields(user, DateTime.Now);
+                    _reactionRepository.Add(reaction);
+
+                }
                 await _reactionRepository.Commit();
 
                 return true;
@@ -224,8 +237,36 @@ namespace Api.Controllers
             
         }
 
+
+        [HttpPost("postComment")]
+        public async Task<ActionResult<bool>> PostComment(AddCommentRequest request)
+        {
+            try
+            {
+                var user = await _userRepository.GetById(request.CreatedById);
+
+                var comment = new Comment
+                {
+                    Content = request.Content,
+                    ParentId = request.ParentId
+                };
+                comment.UpdateCreatedByFields(user, DateTime.Now);
+                _commentRepository.Add(comment);
+
+                await _commentRepository.Commit();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+
         [HttpGet("getAllReactions")]
-        public async Task<ActionResult<List<ReactionViewModel>>> getAllReactions(string parentId)
+        public async Task<ActionResult<List<ReactionViewModel>>> GetAllReactions(string parentId)
         {
             try
             {
@@ -239,5 +280,24 @@ namespace Api.Controllers
             }
 
         }
+
+
+
+        [HttpGet("getAllComments")]
+        public async Task<ActionResult<List<CommentViewModel>>> GetAllComments(string parentId)
+        {
+            try
+            {
+                var reactions = await _commentRepository.GetAllAsync(x => x.ParentId == parentId);
+                var reactionViewModels = _mapper.Map<List<CommentViewModel>>(reactions);
+                return reactionViewModels;
+            }
+            catch
+            {
+                return NotFound("Ractions not found");
+            }
+
+        }
+
     }
 }
