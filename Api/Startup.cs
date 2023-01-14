@@ -21,6 +21,7 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<INotificationService, NotificationService>();
@@ -36,6 +37,7 @@ namespace Api
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IResultRepository, ResultRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IReactionRepository, ReactionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

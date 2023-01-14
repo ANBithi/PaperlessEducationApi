@@ -24,24 +24,7 @@ namespace Api.Models
         [BsonElement("userType")]
         public UserTypeEnum UserType { get; set; }
 
-        [BsonElement("createdAt")]
-        [BsonRepresentation(BsonType.DateTime)]
-        public DateTime CreatedAt { get; set; }
-        [BsonElement("createdBy")]
-        public string CreatedBy { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("createdById")]
-        public string CreatedById { get; set; }
-        [BsonElement("modifiedAt")]
-        [BsonRepresentation(BsonType.DateTime)]
-        public DateTime ModifiedAt { get; set; }
-        [BsonElement("modifiedBy")]
-        public string ModifiedBy { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("modifiedById")]
-        public string ModifiedById { get; set; }
+       
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
     }

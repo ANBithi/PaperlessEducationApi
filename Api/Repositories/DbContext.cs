@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Api.Mapper;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System;
@@ -38,9 +39,8 @@ namespace Api.Repositories
 
         private static void DefineClassMaps()
         {
-            // Log.Information($"DefineClassMaps Called!");
-            //IDbEntityMapper.Map();
-            //UserMapper.Map();
+            AbstractDbEntityMapper.Map();
+            ReactionMapper.Map();
             
         }
 

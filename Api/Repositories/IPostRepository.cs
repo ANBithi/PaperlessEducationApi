@@ -1,5 +1,5 @@
 ﻿using Api.Repositories;
-using Api.Models;
+using Api.Models.Post;
 
 namespace Api.Repositories
 {

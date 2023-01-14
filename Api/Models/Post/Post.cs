@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Models
+namespace Api.Models.Post
 {
     public class Post : AbstractDbEntity
     {
@@ -15,9 +15,7 @@ namespace Api.Models
         [BsonElement("belongsTo")]
         public string BelongsTo { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("createdBy")]
-        public string CreatedBy { get; set; }
+        
 
         [BsonElement("creatorType")]
         public int CreatorType { get; set; }
@@ -25,16 +23,12 @@ namespace Api.Models
         [BsonElement("postDescription")]
         public string PostDescription { get; set; }
 
-        [BsonRepresentation(BsonType.DateTime)]
-        [BsonElement("createdAt")]
-        public DateTime CreatedAt { get; set; }
+        
 
         [BsonElement("atachments")]
         public List<Attachment> Attachments { get; set; }
 
-        [BsonRepresentation(BsonType.DateTime)]
-        [BsonElement("editedAt")]
-        public DateTime EditedAt { get; set; }
+        
 
     }
 }

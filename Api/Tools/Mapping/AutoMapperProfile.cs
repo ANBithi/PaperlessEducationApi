@@ -1,0 +1,19 @@
+﻿using Api.Models.Post;
+using Api.ViewModels;
+using AutoMapper;
+
+
+namespace Api.Tools.Mapping
+{
+    public class AutoMapperProfile : Profile
+    {
+        public AutoMapperProfile()
+        {
+            AllowNullCollections = true;
+
+            CreateMap<Reaction, ReactionViewModel>();
+           
+        }
+
+    }
+}

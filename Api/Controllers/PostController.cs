@@ -11,6 +11,8 @@ using Api.ViewModels;
 using Api.Requests.PostRequests;
 using Api.Requests.NotificationRequests;
 using Api.Responses.PostResponses;
+using Api.Models.Post;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -22,12 +24,17 @@ namespace Api.Controllers
         private readonly IPostRepository _postRepository;
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
+        private readonly IReactionRepository _reactionRepository;
+        private readonly IMapper _mapper;
         public PostController(IPostRepository postRepository,
-            IUserRepository userRepository, INotificationService notificationService)
+            IUserRepository userRepository, INotificationService notificationService,
+            IReactionRepository reactionRepository, IMapper mapper)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _notificationService = notificationService;
+            _reactionRepository = reactionRepository;
+            _mapper = mapper;
         }
         [HttpPost("add")]
         public async Task<ActionResult<bool>> Add(AddPostRequest request)
@@ -189,6 +196,46 @@ namespace Api.Controllers
             {
                 Console.WriteLine(e);
                 return postView;
+            }
+
+        }
+
+        [HttpPost("addReaction")]
+        public async Task<ActionResult<bool>> AddReaction(AddReactionRequest request)
+        {
+           try
+            {
+                var user = await _userRepository.GetById(request.CreatedBy);
+                var reaction = new Reaction
+                {
+                    IconId = request.IconId,
+                    ParentId = request.ParentId
+                };
+                reaction.UpdateCreatedByFields(user, DateTime.Now);
+                _reactionRepository.Add(reaction);
+                await _reactionRepository.Commit();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+
+        [HttpGet("getAllReactions")]
+        public async Task<ActionResult<List<ReactionViewModel>>> getAllReactions(string parentId)
+        {
+            try
+            {
+                var reactions = await _reactionRepository.GetAllAsync(x => x.ParentId == parentId);
+                var reactionViewModels = _mapper.Map<List<ReactionViewModel>>(reactions);
+                return reactionViewModels;
+            }
+            catch
+            {
+                return NotFound("Ractions not found");
             }
 
         }
