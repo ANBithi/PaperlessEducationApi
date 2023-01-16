@@ -10,6 +10,8 @@ using Api.IServices;
 using Api.Responses.UserResponses;
 using Api.Requests.UserRequests;
 using Api.Requests.StudentRequests;
+using AutoMapper;
+using Api.Models.UserInteraction;
 
 namespace Api.Services
 {
@@ -17,19 +19,54 @@ namespace Api.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-      
+        private readonly IUserInteractionRepository _userInteractionRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IFacultyRepository _facultyRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IInstituteRepository _instituteRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IStudentRepository studentRepository, IFacultyRepository facultyRepository, IDepartmentRepository departmentRepository, IInstituteRepository instituteRepository)
+        public UserService(IUserRepository userRepository, IStudentRepository studentRepository,
+            IFacultyRepository facultyRepository, IDepartmentRepository departmentRepository,
+            IInstituteRepository instituteRepository, IUserInteractionRepository userInteractionRepository,
+            IMapper mapper)
         {
             _userRepository = userRepository;
             _studentRepository = studentRepository;
             _facultyRepository = facultyRepository;
             _departmentRepository = departmentRepository;
             _instituteRepository = instituteRepository;
+            _userInteractionRepository = userInteractionRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<bool> UpdateUserInteraction(string createdById, InteractionType type)
+        {
+          try
+            {
+                var found = await _userInteractionRepository.GetSingle(x => x.CreatedById == createdById && x.Type == type); 
+                if(found is null)
+                {
+                    var interaction = new UserInteraction
+                    {
+                        Time = DateTime.Now,
+                        Type = type,
+                        CreatedById = createdById,
+                    };
+                    _userInteractionRepository.Add(interaction);
+                }
+                else
+                {
+                    found.Time = DateTime.Now;
+                    _userInteractionRepository.Update(found);
+                }
+                await _userInteractionRepository.Commit();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<PasswordChangeStatus> ChangePassword(string oldPassword, string newPassword, string id)

@@ -288,13 +288,13 @@ namespace Api.Controllers
         {
             try
             {
-                var reactions = await _commentRepository.GetAllAsync(x => x.ParentId == parentId);
-                var reactionViewModels = _mapper.Map<List<CommentViewModel>>(reactions);
-                return reactionViewModels;
+                var commnets = await _commentRepository.GetAllAsync(x => x.ParentId == parentId);
+                var commnetsViewModels = _mapper.Map<List<CommentViewModel>>(commnets);
+                return commnetsViewModels;
             }
             catch
             {
-                return NotFound("Ractions not found");
+                return NotFound("Comments not found");
             }
 
         }

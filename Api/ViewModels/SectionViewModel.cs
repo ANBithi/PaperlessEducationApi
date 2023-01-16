@@ -12,5 +12,6 @@ namespace Api.ViewModels
         public string StartTime { get; set; }
         public string EndTime { get; set; }
         public string CourseDescription { get; set; }
+        public string CourseCover { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using Api.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Api.ViewModels;
+using Api.Responses.Notification;
+using Api.Models.UserInteraction;
 
 namespace Api.Controllers
 {
@@ -17,22 +19,32 @@ namespace Api.Controllers
         private readonly IUserRepository _userRepository;
         private readonly ISectionRepository _sectionRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly IUserInteractionRepository _userInteractionRepository;
 
-        public NotificationController(INotificationRepository notificationRepository, IPostRepository postRepostiry, IUserRepository userRepository, ICourseRepository courseRepository, ISectionRepository sectionRepository)
+        public NotificationController(INotificationRepository notificationRepository, 
+            IPostRepository postRepostiry, IUserRepository userRepository, 
+            ICourseRepository courseRepository, ISectionRepository sectionRepository,
+            IUserInteractionRepository userInteractionRepository )
         {
             _notificationRepository = notificationRepository;
             _postRepostiry = postRepostiry;
             _userRepository = userRepository;
             _courseRepository = courseRepository;
             _sectionRepository = sectionRepository;
+            _userInteractionRepository = userInteractionRepository;
         }
 
         [HttpGet("getNotifications")]
-        public async Task<ActionResult<List<NotificationViewModel>>> GetNotifications(string currentUser, string type)
+        public async Task<ActionResult<AllNotificationResponse>> GetNotifications(string currentUser, string type)
         {
-            var notificationViews = new List<NotificationViewModel>();
-            var notifications = await _notificationRepository.GetAllAsync(x=>x.Id != currentUser && x.Type == type);
-            if(type == "post")
+            var response = new AllNotificationResponse
+            {
+                OldNotifications = new List<NotificationViewModel>(),
+                NewNotifications = new List<NotificationViewModel>(),
+            };
+            var notifications = await _notificationRepository.GetAllAsync(x=> x.Type == type);
+            var userInteraction = await _userInteractionRepository.GetSingle(x => x.CreatedById == currentUser && x.Type == InteractionType.NotificationRead);
+            if (type == "post")
             {
                 foreach(Notification n in notifications)
                 {
@@ -49,11 +61,27 @@ namespace Api.Controllers
                         Section = section.SectionNumber,
                         SectionId = section.Id
                 };
-                    notificationViews.Add(view);  
+                    if (userInteraction != null)
+                    {
+                        if (n.CreatedAt > userInteraction.Time)
+                        {
+                            response.NewNotifications.Add(view);
+                        }
+                        else
+                        {
+                            response.OldNotifications.Add(view);
+                        }
+                    }
+                    else
+                    {
+                        response.NewNotifications.Add(view);
+                    }
+                   
                 }
+                response.UnreadCount = response.NewNotifications.Count;
             }
            
-            return notificationViews;
+            return response;
         }
     }
 }

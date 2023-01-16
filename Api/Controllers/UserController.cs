@@ -44,5 +44,12 @@ namespace Api.Controllers
 
             return passwordStatus;
         }
+
+        [HttpPost("UserInteraction")]
+        public async Task<ActionResult<bool>> UpdateUserInteraction(UserInteractionRequest request)
+        {
+                var response = await _userService.UpdateUserInteraction(request.CreatedById, request.Type);
+                return response;
+        }
     }
 }

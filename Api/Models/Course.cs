@@ -48,5 +48,7 @@ namespace Api.Models
         [BsonElement("addedAt")]
         public DateTime AddedAt { get; set; }
 
+        [BsonElement("courseCover")]
+        public string CourseCover{ get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace Api
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IReactionRepository, ReactionRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IUserInteractionRepository, UserInteractionRepositoy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,6 @@
 ﻿using Api.Models.Post;
+using Api.Models.UserInteraction;
+using Api.Requests.UserRequests;
 using Api.ViewModels;
 using AutoMapper;
 

@@ -119,7 +119,8 @@ namespace Api.Controllers
                         SectionNumber = sec.SectionNumber,
                         StartTime = sec.SectionStartTime,
                         EndTime = sec.SectionEndTime,
-                        CourseDescription = course.CourseDetails
+                        CourseDescription = course.CourseDetails,
+                        CourseCover = course.CourseCover
                     };
                     response.Data.Add(sectionView);
                 }
@@ -209,6 +210,7 @@ namespace Api.Controllers
                     EndTime = section.SectionEndTime,
                     CourseDescription = course.CourseDetails,
                     Students = studentsView,
+                    CourseCover = course.CourseCover
                 };
                 sectionDetail.Data = sectionView;
                 sectionDetail.Response = true;
