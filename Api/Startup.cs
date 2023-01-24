@@ -92,6 +92,7 @@ namespace Api
             services.AddScoped<IReactionRepository, ReactionRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IUserInteractionRepository, UserInteractionRepositoy>();
+            services.AddScoped<IExamMetadataRepository, ExamMetadataRepository>();
             services.AddScoped<IRequestUserService, RequestUserService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }

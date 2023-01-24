@@ -1,4 +1,5 @@
 ﻿using Api.Mapper;
+using Api.Mapper.Exam;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
@@ -45,6 +46,7 @@ namespace Api.Repositories
             PostMapper.Map();
             InteractionMapper.Map();
             CourseMapper.Map();
+            ExamMetadataMapper.Map();
         }
 
         private void RegisterConventions()

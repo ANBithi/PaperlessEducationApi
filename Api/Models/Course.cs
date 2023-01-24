@@ -15,11 +15,16 @@ namespace Api.Models
         public string Department { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("sections")]
         public List<string> Sections { get; set; }
         public string CourseDetails { get; set; }
         public CourseTypeEnum Type { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("preRequisities")]
         public List<string> PreRequisities { get; set; }
         public int Credits { get; set; }
-        public string CourseCover{ get; set; }
+        public string CourseCover { get; set; }
     }
 }

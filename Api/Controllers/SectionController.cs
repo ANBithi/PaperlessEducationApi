@@ -25,12 +25,12 @@ namespace Api.Controllers
         private readonly IFacultyRepository _facultyRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IResultRepository _resultRepository;
-        private readonly IRequestUserService _requestUserTenantService;
+        private readonly IRequestUserService _requestUserService;
         public SectionController(IFacultyRepository facultyRepository,
             IUserRepository userRepository,
             ISectionRepository sectionRepository,
             ICourseRepository courseRepository,
-            IStudentRepository studentRepository, IResultRepository resultRepository, IRequestUserService requestUserTenantService)
+            IStudentRepository studentRepository, IResultRepository resultRepository, IRequestUserService requestUserService)
         {
             _courseRepository = courseRepository;
             _userRepository = userRepository;
@@ -38,7 +38,7 @@ namespace Api.Controllers
             _facultyRepository = facultyRepository;
             _studentRepository = studentRepository;
             _resultRepository = resultRepository;
-            _requestUserTenantService = requestUserTenantService;
+            _requestUserService = requestUserService;
         }
 
         [HttpPost("Add")]
@@ -98,7 +98,7 @@ namespace Api.Controllers
         [HttpGet("getAllSections")]
         public async Task<ActionResult<SectionResponse>> GetAllSections([FromQuery]string userId, int type)
         {
-            var user = await _requestUserTenantService.GetUser();
+            var user = await _requestUserService.GetUser();
             
             var response = new SectionResponse
             {
