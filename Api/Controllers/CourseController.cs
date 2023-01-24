@@ -1,7 +1,9 @@
-﻿using Api.Enums;
+﻿using Api.Commons;
+using Api.Enums;
 using Api.Models;
 using Api.Repositories;
 using Api.Requests.CourseRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,23 +11,27 @@ using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : ControllerBase
     {
         private readonly ICourseRepository _courseRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IRequestUserService _requestUserTenantService;
         public CourseController(
-            ICourseRepository courseRepository, IDepartmentRepository departmentRepository)
+            ICourseRepository courseRepository, IDepartmentRepository departmentRepository, IRequestUserService requestUserTenantService)
         {
 
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
+            _requestUserTenantService = requestUserTenantService;
         }
 
         [HttpPost("Add")]
         public async Task<ActionResult<bool>> Add(AddCourseRequest request)
         {
+            
             var department = await _departmentRepository.GetById(request.Department);
             try
             {
@@ -42,7 +48,6 @@ namespace Api.Controllers
                 };
 
                 course.Sections = new List<string>();
-                course.AddedAt = DateTime.Now;
 
                 _courseRepository.Add(course);
                 await _courseRepository.Commit();

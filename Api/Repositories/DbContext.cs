@@ -42,7 +42,9 @@ namespace Api.Repositories
             AbstractDbEntityMapper.Map();
             ReactionMapper.Map();
             CommentMapper.Map();
+            PostMapper.Map();
             InteractionMapper.Map();
+            CourseMapper.Map();
         }
 
         private void RegisterConventions()

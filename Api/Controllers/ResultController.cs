@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Api.Requests.ResultRequests;
 using Api.CustomValues;
 using Api.Responses.ResultResponses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ResultController : ControllerBase

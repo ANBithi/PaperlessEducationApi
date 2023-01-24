@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Api.Models
 {
+
     public class Result : AbstractDbEntity
     {
         [BsonRepresentation(BsonType.ObjectId)]

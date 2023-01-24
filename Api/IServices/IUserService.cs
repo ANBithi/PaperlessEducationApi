@@ -2,8 +2,6 @@
 using Api.Requests.StudentRequests;
 using Api.Requests.UserRequests;
 using Api.Responses.UserResponses;
-using Api.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.IServices

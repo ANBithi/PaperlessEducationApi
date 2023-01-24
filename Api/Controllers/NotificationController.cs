@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Api.ViewModels;
 using Api.Responses.Notification;
 using Api.Models.UserInteraction;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class NotificationController  : ControllerBase
@@ -60,7 +61,7 @@ namespace Api.Controllers
                         PostId = post.Id,
                         Section = section.SectionNumber,
                         SectionId = section.Id
-                };
+                    };
                     if (userInteraction != null)
                     {
                         if (n.CreatedAt > userInteraction.Time)

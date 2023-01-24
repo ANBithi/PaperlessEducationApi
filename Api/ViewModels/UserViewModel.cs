@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Api.Enums;
+using System;
 
 namespace Api.ViewModels
 {
@@ -8,7 +9,7 @@ namespace Api.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public int UserType { get; set; }
+        public UserTypeEnum UserType { get; set; }
         public bool IsActive { get; set; }
         public DateTime LastLogin { get; set; }
     }

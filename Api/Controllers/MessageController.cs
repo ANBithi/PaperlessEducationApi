@@ -10,9 +10,11 @@ using Api.Requests.MessageRequests;
 using Api.ViewModels;
 using Api.Requests.NotificationRequests;
 using Api.Responses.MessageResponses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MessageController : ControllerBase

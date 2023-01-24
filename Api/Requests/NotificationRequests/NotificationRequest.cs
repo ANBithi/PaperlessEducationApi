@@ -10,5 +10,6 @@ namespace Api.Requests.NotificationRequests
         public string Type { get; set; }
         public string Target { get; set; }
         public string DataId { get; set; }
+        public string CreatedById { get; set; }
     }
 }

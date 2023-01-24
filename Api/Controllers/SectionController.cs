@@ -1,9 +1,12 @@
-﻿using Api.Enums;
+﻿using Api.Commons;
+using Api.Enums;
 using Api.Models;
 using Api.Repositories;
 using Api.Requests.SectionRequests;
 using Api.Responses.SectionResponses;
+using Api.Security;
 using Api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +14,7 @@ using System.Threading.Tasks;
 namespace Api.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SectionController : ControllerBase
@@ -21,12 +25,12 @@ namespace Api.Controllers
         private readonly IFacultyRepository _facultyRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IResultRepository _resultRepository;
-
+        private readonly IRequestUserService _requestUserTenantService;
         public SectionController(IFacultyRepository facultyRepository,
             IUserRepository userRepository,
             ISectionRepository sectionRepository,
             ICourseRepository courseRepository,
-            IStudentRepository studentRepository, IResultRepository resultRepository)
+            IStudentRepository studentRepository, IResultRepository resultRepository, IRequestUserService requestUserTenantService)
         {
             _courseRepository = courseRepository;
             _userRepository = userRepository;
@@ -34,6 +38,7 @@ namespace Api.Controllers
             _facultyRepository = facultyRepository;
             _studentRepository = studentRepository;
             _resultRepository = resultRepository;
+            _requestUserTenantService = requestUserTenantService;
         }
 
         [HttpPost("Add")]
@@ -91,8 +96,10 @@ namespace Api.Controllers
 
 
         [HttpGet("getAllSections")]
-        public async Task<ActionResult<SectionResponse>> GetAllSections([FromQuery]string user, int type)
+        public async Task<ActionResult<SectionResponse>> GetAllSections([FromQuery]string userId, int type)
         {
+            var user = await _requestUserTenantService.GetUser();
+            
             var response = new SectionResponse
             {
                 Data = new List<SectionViewModel>(),
@@ -100,7 +107,7 @@ namespace Api.Controllers
             };
             if((UserTypeEnum)type == UserTypeEnum.Faculty)
             {
-                var faculty = await _facultyRepository.GetSingle(x => x.BelongsTo == user);
+                var faculty = await _facultyRepository.GetSingle(x => x.BelongsTo == user.Id);
 
                 var sections = await _sectionRepository.GetAllAsync(x => x.Faculty == faculty.Id);
 
@@ -129,7 +136,7 @@ namespace Api.Controllers
             }
             else
             {
-                var student = await _studentRepository.GetSingle(x => x.BelongsTo == user);
+                var student = await _studentRepository.GetSingle(x => x.BelongsTo == user.Id);
                 var sections = new List<Section>();
                 foreach (string id in student.CurrentClasses)
                 {

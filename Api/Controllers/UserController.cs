@@ -3,12 +3,14 @@ using Api.Requests.StudentRequests;
 using Api.Requests.UserRequests;
 using Api.Responses.UserResponses;
 using Api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase

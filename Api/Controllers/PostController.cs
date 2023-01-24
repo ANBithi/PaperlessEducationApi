@@ -13,10 +13,11 @@ using Api.Requests.NotificationRequests;
 using Api.Responses.PostResponses;
 using Api.Models.Post;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
-   
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PostController : ControllerBase

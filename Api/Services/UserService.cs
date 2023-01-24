@@ -278,7 +278,7 @@ namespace Api.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                UserType = (int)user.UserType,
+                UserType = user.UserType,
                 IsActive = user.IsActive,
                 LastLogin = DateTime.UtcNow
             };
